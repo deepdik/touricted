@@ -21,9 +21,11 @@ DestinationListCreateAPIView,
 DestinationRetrieveUpdateDestroyAPIView,
 HotelListCreateAPIView,
 HotelCreateAPIView,
-HotelTestCreateAPIView,
+# HotelTestCreateAPIView,
+HotelAddAPIView,
 # RecentlyViewedListAPIView
-ImageUploadAPIView
+ImageUploadAPIView,
+ItineraryAddAPIView
 
 )
 
@@ -62,14 +64,18 @@ urlpatterns = [
   url(r'^hotel1/$',HotelListCreateAPIView.as_view(),name="listCreateHotel"),
   # url(r'^edit-delete-hotel/(?P<id>\d+)/$',DestinationRetrieveUpdateDestroyAPIView.as_view(),name="updatedeleteDestination"),
   url(r'^add-hotel/$',HotelCreateAPIView.as_view(),name="updDestination"),
-  url(r'^add-hotels/$',HotelTestCreateAPIView.as_view(),name="updatesDestination"),
+  # url(r'^add-hotels/$',HotelTestCreateAPIView.as_view(),name="updatesDestination"),
 
 
-  url(r'^nights/$',HotelTestCreateAPIView.as_view(),name="updatesDestination"),
+  # url(r'^nights/$',HotelTestCreateAPIView.as_view(),name="updatesDestination"),
 
   url(r'^image-upload/$',ImageUploadAPIView.as_view(),name="ImageUpload"),
-  
-  url(r'^hotels/$',HotelListCreateAPIView.as_view(),name="listCreateHotel"),
+
+  url(r'^hotels/$',HotelAddAPIView.as_view(),name="CreateHotel"),
+
+  url(r'^itinerary/$',ItineraryAddAPIView.as_view(),name="CreateHotel"),
+
+
 
 
 

@@ -38,7 +38,8 @@ from .serializers import (
 	HotelListSerializer,
 	HotelAddSerializer,
 	HoteltestCreateSerializer,
-	ImageUploadSerializer	
+	ImageUploadSerializer,
+	ItineraryAddSerializer	
 	)
 
 
@@ -127,13 +128,27 @@ class HotelCreateAPIView(CreateAPIView):
 		return Response(serializer.errors, status=400)
 
 
-class HotelTestCreateAPIView(APIView):
+
+
+#Completed
+class HotelAddAPIView(APIView):
 	def post(self, request, format=None):
 		serializer = HotelAddSerializer(data=request.data)		
 		if serializer.is_valid():		
 			serializer.save()			
 			return Response(request.data, status=HTTP_200_OK)
 		return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+#completed
+class ItineraryAddAPIView(APIView):
+	def post(self, request, format=None):
+		serializer = ItineraryAddSerializer(data=request.data)		
+		if serializer.is_valid():		
+			serializer.save()			
+			return Response(request.data, status=HTTP_200_OK)
+		return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
 
 
 

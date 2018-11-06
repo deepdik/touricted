@@ -1,6 +1,6 @@
 from django.contrib import admin
 from tourist.models import (Package,Category,Hotel,HotelImage,
-	Itinerary,ItineraryDays,Activity,Image,Inclusion,Destination,HotelTest,HotelsForPackage,Packageimages)
+	Itinerary,ItineraryDays,Activity,Image,Inclusion,HotelImage,Destination,HotelsForPackage,Packageimages)
 
 class HotelsForPackageInline(admin.TabularInline):
     model = HotelsForPackage
@@ -39,7 +39,7 @@ class ItineraryDaysInline(admin.TabularInline):
 class ItineraryAdmin(admin.ModelAdmin):
     inlines = [ ItineraryDaysInline]
 
-admin.site.register(HotelTest)
+
 
 admin.site.register(Itinerary, ItineraryAdmin)
 
@@ -47,8 +47,10 @@ admin.site.register(Activity)
 
 admin.site.register(Inclusion)
 admin.site.register(Image)
-
+# admin.site.register(HotelImage)
+# admin.site.register(ItineraryDays)
 admin.site.register(Destination)
+
 
 admin.site.register(Hotel, HotelAdmin)
 

@@ -69,6 +69,8 @@ class Destination(models.Model):
 		ordering = ('timestamp',)
 		verbose_name_plural = "Destinations"
 
+
+
 class Hotel(models.Model):	
 	name = models.CharField(max_length=150)
 	facilities = models.TextField(null=True)
@@ -95,14 +97,16 @@ class HotelTest(models.Model):
 	image = models.ImageField()
 
 
+
 class HotelImage(models.Model):
 	hotel = models.ForeignKey(Hotel, related_name = 'Hotel_images')
-	image = models.ImageField()
-	caption = models.CharField(max_length = 120,default = 'name of Itenery')
+	image = models.ImageField(null=True,blank=True)
+	images = models.URLField(default="/image")
+	# caption = models.CharField(max_length = 120,default = 'name of Itenery')
 
 
 class Itinerary(models.Model):
-	name = models.CharField(max_length = 120,default = 'Name of itinerary')	# def __str__(self):
+	name = models.CharField(max_length = 120)	# def __str__(self):
 
 	def __str__(self):
 		return self.name
@@ -138,9 +142,7 @@ class Package(models.Model):
 	category = models.ForeignKey(Category)
 	activity = models.ManyToManyField(Activity)
 	inclusion = models.ManyToManyField(Inclusion)	
-	
-	
-	
+		
 	# cities = models.CharField(max_length=120)
 	Overview = models.TextField(default='overview of package')	
 	Highlights = models.TextField(blank=True,null=True)

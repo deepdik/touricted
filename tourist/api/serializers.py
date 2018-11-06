@@ -49,7 +49,7 @@ class ActivityDetailSerializer(ModelSerializer):
 class InclusionDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Inclusion
-		fields = ['name','InclImg']
+		fields = ['id', 'name','InclImg']
 
 class PackageimagesListSerilizer(ModelSerializer):
 	class Meta:
@@ -64,7 +64,7 @@ class DestinationDetailSerilizer(ModelSerializer):
 class HotelImageListSerializer(ModelSerializer):
 	class Meta:
 		model = HotelImage
-		fields = ['image','caption']
+		fields = ['images']
 
 
 
@@ -104,36 +104,31 @@ class HoteltestCreateSerializer(ModelSerializer):
 	  
 		return HotelTest.objects.create(image=image)
 
+
+
+
+
 class HotelAddSerializer(ModelSerializer):
-	facility = HoteltestCreateSerializer(many=True)
+	images = HotelImageListSerializer(many=True)
 
 
 	class Meta:
 		model = Hotel
-		fields  =['name','address','About','Stars','facility']
+		fields  =['name','address','About','Stars','facilities','images']
 
 
 	def create(self, validated_data):
-		facilities_data = validated_data.pop('facility')	
+		images_data = validated_data.pop('images')
+		print(images_data)	
 		hotel = Hotel.objects.create(**validated_data)
-		for facility_data in facilities_data:
-			HotelTest.objects.create(hotel=hotel, **facility_data)			
+		print(hotel)
+		for image_data in images_data:
+			print(image_data)
+			HotelImage.objects.create(hotel=hotel, **image_data)			
 		return hotel
 
 
-#   def create(self,validate_data):
-# #         shopSlug = validate_data['shopSlug']
-# #         shop = validate_data['shopSlug']
-# #         content = validate_data["content"]
-# #         user = self.context['request'].user
-# #         print ("hello")
-# #         print (self.context['request'].COOKIES['token'])
-# #         print(self.context['request'].META['REMOTE_ADDR'])
-# #         return Feedback.objects.create(
-# #             user = user,
-# #             shop = shop,
-# #             content=content
-# #             )
+
 
 
 class HotelsForPackageSerializer(ModelSerializer):
@@ -141,6 +136,10 @@ class HotelsForPackageSerializer(ModelSerializer):
 	class Meta:
 		model = HotelsForPackage
 		fields = ['day','hotel']
+
+
+
+
 
 class ItineraryDayListSerializer(ModelSerializer):
 	Inclusion = InclusionDetailSerializer(many=True)
@@ -160,6 +159,8 @@ class ItineraryDayListSerializer(ModelSerializer):
 			'Image_Three'
 		]
 
+
+
 	
 class ItineraryListSerializer(ModelSerializer):
 	itinerary = SerializerMethodField()
@@ -175,6 +176,55 @@ class ItineraryListSerializer(ModelSerializer):
 			'itinerary',                        
 
 		]
+
+class ItineraryAddHelperSerializer(ModelSerializer):	
+	class Meta:
+		model = ItineraryDays
+		fields = [
+
+			'Day',
+			'Title',
+			'Cities',
+			'About',
+			'Labels',
+			'Inclusion',        
+			'Image_One',
+			'Image_Two',
+			'Image_Three'
+		]
+
+
+
+
+
+
+				
+
+class ItineraryAddSerializer(ModelSerializer):
+	itinerary = ItineraryAddHelperSerializer(many=True)
+
+	class Meta:
+		model = Itinerary
+		fields = ['name','itinerary']
+
+
+	def create(self, validated_data):
+		days_data = validated_data.pop('itinerary')	
+		itinerary = Itinerary.objects.create(**validated_data)
+		print(itinerary)
+		for day_data in days_data:
+			inclusions = day_data.pop('Inclusion')						
+			itinerary_day = ItineraryDays.objects.create(itinerary=itinerary, **day_data)
+			for inclusion in inclusions:
+				itinerary_day.Inclusion.add(inclusion)
+		return Itinerary
+
+
+
+
+
+
+
 
 class PackageDetailSerializer(ModelSerializer):
 	activity = ActivityDetailSerializer(many=True)
@@ -304,7 +354,6 @@ class ImageUploadSerializer(ModelSerializer):
 			'image'
 
 		]
-
 
 
 
