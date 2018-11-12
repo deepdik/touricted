@@ -75,7 +75,7 @@ urlpatterns = [
 
   url(r'^itinerary/$',ItineraryAddAPIView.as_view(),name="CreateHotel"),
 
-
+  
 
 
 

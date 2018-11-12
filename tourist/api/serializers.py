@@ -24,6 +24,8 @@ from rest_framework.serializers import (
 from drf_extra_fields.fields import Base64ImageField
 
 
+
+#done
 class CategoryListSerializer(ModelSerializer):
 	class Meta:
 		model = Category
@@ -65,6 +67,7 @@ class HotelImageListSerializer(ModelSerializer):
 	class Meta:
 		model = HotelImage
 		fields = ['images']
+
 
 
 
@@ -159,8 +162,6 @@ class ItineraryDayListSerializer(ModelSerializer):
 			'Image_Three'
 		]
 
-
-
 	
 class ItineraryListSerializer(ModelSerializer):
 	itinerary = SerializerMethodField()
@@ -177,6 +178,9 @@ class ItineraryListSerializer(ModelSerializer):
 
 		]
 
+
+
+#done
 class ItineraryAddHelperSerializer(ModelSerializer):	
 	class Meta:
 		model = ItineraryDays
@@ -191,22 +195,14 @@ class ItineraryAddHelperSerializer(ModelSerializer):
 			'Image_One',
 			'Image_Two',
 			'Image_Three'
-		]
-
-
-
-
-
-
-				
-
+		]				
+#done
 class ItineraryAddSerializer(ModelSerializer):
 	itinerary = ItineraryAddHelperSerializer(many=True)
 
 	class Meta:
 		model = Itinerary
 		fields = ['name','itinerary']
-
 
 	def create(self, validated_data):
 		days_data = validated_data.pop('itinerary')	
@@ -225,7 +221,7 @@ class ItineraryAddSerializer(ModelSerializer):
 
 
 
-
+#done
 class PackageDetailSerializer(ModelSerializer):
 	activity = ActivityDetailSerializer(many=True)
 	inclusion = InclusionDetailSerializer(many=True)
@@ -307,6 +303,7 @@ class PackageDetailSerializer(ModelSerializer):
 			'Packageimages'
 		]
 
+#done
 class PackageListSerializer(ModelSerializer):
 	offer = SerializerMethodField()
 	category = CategoryDetailSerializer()
@@ -346,6 +343,7 @@ class PackageListSerializer(ModelSerializer):
 			'BannerImage',          
 		]
 
+#done
 class ImageUploadSerializer(ModelSerializer):
 
 	class Meta:
