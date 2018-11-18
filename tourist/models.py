@@ -18,6 +18,7 @@ class Category(models.Model):
 	name = models.CharField(max_length=120, unique=True)
 	CatImg = models.FileField(upload_to='CatImg/',default='CatImg/None/default.svg')
 	timestamp = models.DateTimeField(auto_now_add=True)
+	
 
 	def __str__(self):
 		return self.name
@@ -56,14 +57,18 @@ class Activity(models.Model):
 
 
 class Destination(models.Model):
-	Destination_type = models.CharField(max_length=120, choices=TYPE)
+	DestinationType = models.CharField(max_length=120, choices=TYPE)
 	name = models.CharField(max_length =120,unique=True)
 	image = models.ImageField()
 	Best_time_for_travel_from = models.CharField(max_length=120, choices=MONTHS)
 	Best_time_for_travel_to = models.CharField(max_length=120, choices=MONTHS)
 	timestamp = models.DateTimeField(auto_now_add=True)
+
 	def __str__(self):
 		return self.name
+
+	def __int__(self):
+		return self.Day
 
 	class Meta:
 		ordering = ('timestamp',)
@@ -130,6 +135,8 @@ class ItineraryDays(models.Model):
 
 	def __int__(self):
 		return self.Day
+
+
 	class Meta:
 		ordering = ('id',)
 		verbose_name_plural = "ItineraryDays"
@@ -142,7 +149,7 @@ class Package(models.Model):
 	category = models.ForeignKey(Category)
 	activity = models.ManyToManyField(Activity)
 	inclusion = models.ManyToManyField(Inclusion)	
-		
+
 	# cities = models.CharField(max_length=120)
 	Overview = models.TextField(default='overview of package')	
 	Highlights = models.TextField(blank=True,null=True)

@@ -46,6 +46,9 @@ from .serializers import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK,HTTP_400_BAD_REQUEST
+from django_filters import rest_framework as filters
+import django_filters
+
 # class CategoryListAPIView(ListAPIView):
 # 	queryset = Category.objects.all()
 # 	serializer_class = CategoryListSerializer
@@ -149,18 +152,19 @@ class ItineraryAddAPIView(APIView):
 		return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
-
+class PackageFilter(django_filters.FilterSet):
+    class Meta:
+        model = Package
+        fields = ('category','Destination__DestinationType','activity','inclusion',
+        	'Destination')
 
 class PackageListAPIView(ListAPIView):
 	queryset = Package.objects.all()
 	serializer_class = PackageListSerializer
 	filter_backends = (DjangoFilterBackend,)
-	filter_fields = ('category','OfferedPricePerPerson','PackageDays','Destination',
-		'activity')
+	filterset_class = PackageFilter
+	# filterset_fields = ('category','OfferedPricePerPerson','PackageDays','Destination',
+	# 	'activity','Destination__DestinationType','inclusion')
 	# permissions_classes = (IsUser,)
 
 class PackageCreateAPIView(CreateAPIView):

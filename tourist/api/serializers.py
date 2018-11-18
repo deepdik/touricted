@@ -41,6 +41,7 @@ class CategoryDetailSerializer(ModelSerializer):
 		fields = [
 			'name',         
 			'CatImg'
+
 		]
 
 class ActivityDetailSerializer(ModelSerializer):
@@ -68,6 +69,10 @@ class HotelImageListSerializer(ModelSerializer):
 		model = HotelImage
 		fields = ['images']
 
+class HotelImageTestListSerializer(ModelSerializer):
+	class Meta:
+		model = HotelTest
+		fields = ['image']
 
 
 
@@ -197,6 +202,7 @@ class ItineraryAddHelperSerializer(ModelSerializer):
 			'Image_Three'
 		]				
 #done
+
 class ItineraryAddSerializer(ModelSerializer):
 	itinerary = ItineraryAddHelperSerializer(many=True)
 
@@ -264,8 +270,9 @@ class PackageDetailSerializer(ModelSerializer):
 		return Excls_list
 
 	def get_Packageimages(self,instance):
-		hotel = Packageimages.objects.filter(package = instance.id)
-		data = HotelImageListSerializer(hotel,many=True).data
+		print(instance.id)
+		hotel = Packageimages.objects.filter(package = instance.id)		
+		data = PackageimagesListSerilizer(hotel,many=True).data		
 		return data
 
 	def get_cities(self,instance):
