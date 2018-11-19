@@ -151,12 +151,15 @@ class ItineraryAddAPIView(APIView):
 			return Response(request.data, status=HTTP_200_OK)
 		return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-
+#package filter completed
 class PackageFilter(django_filters.FilterSet):
-    class Meta:
-        model = Package
-        fields = ('category','Destination__DestinationType','activity','inclusion',
-        	'Destination')
+	
+	price_per_persion = django_filters.RangeFilter(field_name='ActualPricePerPerson')
+	package_days = django_filters.RangeFilter(field_name='PackageDays')
+	class Meta:
+		model = Package
+		fields = {'category','package_days','price_per_persion','Destination__DestinationType','activity','inclusion',
+			'Destination'}
 
 class PackageListAPIView(ListAPIView):
 	queryset = Package.objects.all()
