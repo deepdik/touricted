@@ -17,10 +17,19 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts.views import activate
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/tourist/',include('tourist.api.urls',namespace="tourist-api")),
+    url(r'^api/v1/tourist/',include('tourist.api.urls',namespace="tourist-api")),
+    url(r'^api/v1/users/',include('accounts.api.urls',namespace="users-api")),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',activate, name='activate'),#Email Activation
+
+    url('^', include('django.contrib.auth.urls')), #email varification
+    url(r'^rest-auth/', include('rest_auth.urls')), #social login
+    url(r'^accounts/',include('allauth.urls'), name='socialaccount_signup'),
+    
    
 ]
 if settings.DEBUG:

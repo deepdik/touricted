@@ -17,21 +17,18 @@ from tourist.models import (
 from rest_framework.serializers import (
 	ModelSerializer,
 	SerializerMethodField,
-	DateTimeField,  
-	ValidationError,
+
 
 	)
-from drf_extra_fields.fields import Base64ImageField
-
-
 
 #done
+
 class CategoryListSerializer(ModelSerializer):
 	class Meta:
 		model = Category
 		fields = [
 			'id',
-			'name',                     
+			'name',
 			'CatImg',
 		]
 
@@ -39,7 +36,7 @@ class CategoryDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Category
 		fields = [
-			'name',         
+			'name',
 			'CatImg'
 
 		]
@@ -64,6 +61,12 @@ class DestinationDetailSerilizer(ModelSerializer):
 		model  = Destination
 		fields = '__all__'
 
+class DestinationListSerializer(ModelSerializer):
+
+	class Meta:
+		model = Destination
+		fields= '__all__'
+
 class HotelImageListSerializer(ModelSerializer):
 	class Meta:
 		model = HotelImage
@@ -74,7 +77,10 @@ class HotelImageTestListSerializer(ModelSerializer):
 		model = HotelTest
 		fields = ['image']
 
-
+class PackageCreateSerializer(ModelSerializer):
+	class Meta:
+		model = Package
+		fields = '__all__'
 
 
 class HotelListSerializer(ModelSerializer):
@@ -89,7 +95,7 @@ class HotelListSerializer(ModelSerializer):
 
 	def get_facilities(self,instance):
 		fac_str  =   instance.facilities
-		fac_list= fac_str.split(",")        
+		fac_list= fac_str.split(",")
 		return fac_list
 
 	class Meta:
@@ -99,9 +105,9 @@ class HotelListSerializer(ModelSerializer):
 
 
 class HoteltestCreateSerializer(ModelSerializer):
-	
-	# image =Base64ImageField()   
-	
+
+	# image =Base64ImageField()
+
 
 	class Meta:
 		model=HotelTest
@@ -109,7 +115,7 @@ class HoteltestCreateSerializer(ModelSerializer):
 
 	def create(self, validated_data):
 		image=validated_data.pop('image')
-	  
+
 		return HotelTest.objects.create(image=image)
 
 
@@ -118,8 +124,6 @@ class HoteltestCreateSerializer(ModelSerializer):
 
 class HotelAddSerializer(ModelSerializer):
 	images = HotelImageListSerializer(many=True)
-
-
 	class Meta:
 		model = Hotel
 		fields  =['name','address','About','Stars','facilities','images']
@@ -127,12 +131,13 @@ class HotelAddSerializer(ModelSerializer):
 
 	def create(self, validated_data):
 		images_data = validated_data.pop('images')
-		print(images_data)	
+		print(images_data)
 		hotel = Hotel.objects.create(**validated_data)
 		print(hotel)
 		for image_data in images_data:
 			print(image_data)
-			HotelImage.objects.create(hotel=hotel, **image_data)			
+			HotelImage.objects.create(hotel=hotel, **image_data)
+
 		return hotel
 
 
@@ -151,7 +156,7 @@ class HotelsForPackageSerializer(ModelSerializer):
 
 class ItineraryDayListSerializer(ModelSerializer):
 	Inclusion = InclusionDetailSerializer(many=True)
-	
+
 	class Meta:
 		model = ItineraryDays
 		fields = [
@@ -161,16 +166,16 @@ class ItineraryDayListSerializer(ModelSerializer):
 			'Cities',
 			'About',
 			'Labels',
-			'Inclusion',        
+			'Inclusion',
 			'Image_One',
 			'Image_Two',
 			'Image_Three'
 		]
 
-	
+
 class ItineraryListSerializer(ModelSerializer):
 	itinerary = SerializerMethodField()
-	
+
 	def get_itinerary(self,instance):
 		itinerary = ItineraryDays.objects.filter(itinerary = instance.id)
 		data = ItineraryDayListSerializer(itinerary,many=True).data
@@ -178,15 +183,15 @@ class ItineraryListSerializer(ModelSerializer):
 
 	class Meta:
 		model = Itinerary
-		fields = [          
-			'itinerary',                        
+		fields = [
+			'itinerary',
 
 		]
 
 
 
 #done
-class ItineraryAddHelperSerializer(ModelSerializer):	
+class ItineraryAddHelperSerializer(ModelSerializer):
 	class Meta:
 		model = ItineraryDays
 		fields = [
@@ -196,13 +201,12 @@ class ItineraryAddHelperSerializer(ModelSerializer):
 			'Cities',
 			'About',
 			'Labels',
-			'Inclusion',        
+			'Inclusion',
 			'Image_One',
 			'Image_Two',
 			'Image_Three'
-		]				
+		]
 #done
-
 class ItineraryAddSerializer(ModelSerializer):
 	itinerary = ItineraryAddHelperSerializer(many=True)
 
@@ -211,11 +215,11 @@ class ItineraryAddSerializer(ModelSerializer):
 		fields = ['name','itinerary']
 
 	def create(self, validated_data):
-		days_data = validated_data.pop('itinerary')	
+		days_data = validated_data.pop('itinerary')
 		itinerary = Itinerary.objects.create(**validated_data)
 		print(itinerary)
 		for day_data in days_data:
-			inclusions = day_data.pop('Inclusion')						
+			inclusions = day_data.pop('Inclusion')
 			itinerary_day = ItineraryDays.objects.create(itinerary=itinerary, **day_data)
 			for inclusion in inclusions:
 				itinerary_day.Inclusion.add(inclusion)
@@ -245,10 +249,10 @@ class PackageDetailSerializer(ModelSerializer):
 	def get_offer(self,instance):
 		ActualPrice  =   instance.ActualPricePerPerson
 		OfferedPrice  =instance.OfferedPricePerPerson
-		Per_offer = str((ActualPrice - OfferedPrice)*100 // ActualPrice) +'%'       
+		Per_offer = str((ActualPrice - OfferedPrice)*100 // ActualPrice) +'%'
 		return Per_offer
 
-	def get_IncludeHotel(self,instance):        
+	def get_IncludeHotel(self,instance):
 		hotel = HotelsForPackage.objects.filter(package = instance.id)
 		data = HotelsForPackageSerializer(hotel,many=True).data
 		return data
@@ -261,23 +265,23 @@ class PackageDetailSerializer(ModelSerializer):
 	def get_Inclusion_text(self,instance):
 		Incls_str = instance.Inclusion_text
 		Incls_list= Incls_str.split(",")
-		
+
 		return Incls_list
 
 	def get_Exclusion_text(self,instance):
 		Excls_str = instance.Exclusion_text
-		Excls_list= Excls_str.split(",")        
+		Excls_list= Excls_str.split(",")
 		return Excls_list
 
 	def get_Packageimages(self,instance):
 		print(instance.id)
-		hotel = Packageimages.objects.filter(package = instance.id)		
-		data = PackageimagesListSerilizer(hotel,many=True).data		
+		hotel = Packageimages.objects.filter(package = instance.id)
+		data = PackageimagesListSerilizer(hotel,many=True).data
 		return data
 
 	def get_cities(self,instance):
 		Itinerary = ItineraryDays.objects.filter(itinerary=instance.Itinerary)
-		data = ItineraryDayListSerializer(Itinerary,many=True).data		
+		data = ItineraryDayListSerializer(Itinerary,many=True).data
 		cities = []
 		for i in range(len(data)):
 			cities.append(data[i]['Cities'])
@@ -286,7 +290,7 @@ class PackageDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Package
 		fields = [
-			'id',           
+			'id',
 			'category',
 			'activity',
 			'inclusion',
@@ -295,15 +299,15 @@ class PackageDetailSerializer(ModelSerializer):
 			'cities',
 			'Overview',
 			'Highlights',
-			'Destination',          
+			'Destination',
 			'PackageDays',
-			'PackageNights',        
+			'PackageNights',
 			'Inclusion_text',
 			'Exclusion_text',
 			'ActualPricePerPerson',
 			'OfferedPricePerPerson',
 			'offer',
-			'DepartureCity',            
+			'DepartureCity',
 			# 'NightOneLessThanDay',
 			'IncludeHotel',
 			'BannerImage',
@@ -317,29 +321,29 @@ class PackageListSerializer(ModelSerializer):
 	inclusion = InclusionDetailSerializer(many=True)
 	Destination = DestinationDetailSerilizer()
 	cities  =SerializerMethodField()
-	
+
 	def get_offer(self,instance):
 		ActualPrice  =   instance.ActualPricePerPerson
 		OfferedPrice  =instance.OfferedPricePerPerson
-		Per_offer = str((ActualPrice - OfferedPrice)*100 // ActualPrice) +'%'       
+		Per_offer = str((ActualPrice - OfferedPrice)*100 // ActualPrice) +'%'
 		return Per_offer
 
 	def get_cities(self,instance):
 		Itinerary = ItineraryDays.objects.filter(itinerary=instance.Itinerary)
-		data = ItineraryDayListSerializer(Itinerary,many=True).data		
+		data = ItineraryDayListSerializer(Itinerary,many=True).data
 		cities = []
 		for i in range(len(data)):
 			cities.append(data[i]['Cities'])
 		return cities
-		
+
 	class Meta:
 		model = Package
 		fields = [
-			'id',           
+			'id',
 			'category',
 			'cities',
 			'PackageName',
-			'Destination',  
+			'Destination',
 			'inclusion',
 			'Destination',
 			'PackageDays',
@@ -347,7 +351,7 @@ class PackageListSerializer(ModelSerializer):
 			'ActualPricePerPerson',
 			'OfferedPricePerPerson',
 			'offer',
-			'BannerImage',          
+			'BannerImage',
 		]
 
 #done
@@ -359,11 +363,3 @@ class ImageUploadSerializer(ModelSerializer):
 			'image'
 
 		]
-
-
-
-
-
-
-
-

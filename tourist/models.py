@@ -1,10 +1,10 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.db.models.signals import pre_save
 # Create your models here.
 
-TYPE = (('domestic', 'Domestic'), ('international', 'International'))
-MONTHS = (('january','JAN'),('february','FEB'),('march','MAR'),('april','APR'),('may','MAY'),
+TYPE = (('domestic','Domestic'),('international','International'))
+MONTHS = (('january', 'JAN'),('february','FEB'),('march','MAR'),('april','APR'),('may','MAY'),
 	('june','JUN'),('july','JUL'),('august','AUG'),('september','SEP'))
 
 def upload_location(instance, filename):
@@ -19,7 +19,6 @@ class Category(models.Model):
 	CatImg = models.FileField(upload_to='CatImg/',default='CatImg/None/default.svg')
 	timestamp = models.DateTimeField(auto_now_add=True)
 	
-
 	def __str__(self):
 		return self.name
 
@@ -136,10 +135,17 @@ class ItineraryDays(models.Model):
 	def __int__(self):
 		return self.Day
 
-
 	class Meta:
 		ordering = ('id',)
 		verbose_name_plural = "ItineraryDays"
+
+class IncludedHotel(models.Model):
+	day = models.CharField(max_length = 8, default = '1-2')	
+	hotel = models.ForeignKey(Hotel, related_name = 'hotel_for_name')
+
+	def __str__(self):
+		return self.day
+
 
 class Package(models.Model):
 	PackageName = models.CharField(max_length=120, unique=True)
@@ -148,8 +154,10 @@ class Package(models.Model):
 	PackageNights = models.PositiveSmallIntegerField(default=1)
 	category = models.ForeignKey(Category)
 	activity = models.ManyToManyField(Activity)
-	inclusion = models.ManyToManyField(Inclusion)	
-
+	inclusion = models.ManyToManyField(Inclusion)
+	
+	hotel = models.ManyToManyField(IncludedHotel)
+	hotelStars = models.CharField(max_length = 120,blank=True)
 	# cities = models.CharField(max_length=120)
 	Overview = models.TextField(default='overview of package')	
 	Highlights = models.TextField(blank=True,null=True)
@@ -170,11 +178,24 @@ class Package(models.Model):
 	def __str__(self):
 		return self.PackageName
 
+
+
 	class Meta:
 		ordering = ('timestamp',)
 		verbose_name_plural = "Packages"
 
+# def create_hotelStars(instance):
+# 	for hotel in instance.hotel:
+# 		print(hotel.Stars, 'sfffffffff')
 
+# 	return "1"
+# def pre_save_package_receiver(sender, instance, *args, **kwargs):
+#     if not instance.hotelStars:
+#         instance.hotelStars = create_hotelStars(instance)
+
+# pre_save.connect(pre_save_package_receiver, sender=Package)
+
+	
 
 class Packageimages(models.Model):
 	package = models.ForeignKey(Package, related_name = 'Package_images')
@@ -182,11 +203,13 @@ class Packageimages(models.Model):
 	caption = models.CharField(max_length = 120,default = 'image Captions')
 
 
-
 class HotelsForPackage(models.Model):
-	day = models.CharField(max_length = 20,default = '1-2')
-	package = models.ForeignKey(Package, default=1,related_name = 'hotel_package')
+	day = models.CharField(max_length = 20, default = '1-2')
+	package = models.ForeignKey(Package, default = 1, related_name = 'hotel_package')
 	hotel = models.ForeignKey(Hotel, related_name = 'hotel_name')
+
+	def __int__(self):
+		return self.hotel
 
 	class Meta:
 		verbose_name_plural = "Hotels For Package"

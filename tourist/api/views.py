@@ -23,6 +23,7 @@ from tourist.models import (
 	Activity,
 	Destination,
 	HotelTest,
+	HotelsForPackage,
 	Image	
 	)
 
@@ -39,7 +40,9 @@ from .serializers import (
 	HotelAddSerializer,
 	HoteltestCreateSerializer,
 	ImageUploadSerializer,
-	ItineraryAddSerializer	
+	ItineraryAddSerializer,
+	PackageCreateSerializer,
+	DestinationListSerializer	
 	)
 
 
@@ -49,27 +52,6 @@ from rest_framework.status import HTTP_200_OK,HTTP_400_BAD_REQUEST
 from django_filters import rest_framework as filters
 import django_filters
 
-# class CategoryListAPIView(ListAPIView):
-# 	queryset = Category.objects.all()
-# 	serializer_class = CategoryListSerializer
-# 	# permissions_classes = (IsUser,)
-
-# class CategoryCreateAPIView(CreateAPIView):
-# 	queryset = Category.objects.all()
-# 	serializer_class = CategoryDetailSerializer
-# 	# permissions_classes = (IsAuthenticated,IsAdminUser)
-
-# class CategoryUpdateAPIView(UpdateAPIView):
-# 	queryset = Category.objects.all()
-# 	serializer_class = CategoryDetailSerializer
-# 	lookup_field = "id"
-# 	# permissions_classes = (IsAuthenticated,IsAdminUser)
-
-# class CategoryDeleteAPIView(DestroyAPIView):
-# 	queryset = Category.objects.all()
-# 	serializer_class = CategoryDetailSerializer
-# 	lookup_field = "id"
-# 	# permissions_classes = (IsAuthenticated,IsAdminUser)
 
 
 class CategoryListCreateAPIView(ListCreateAPIView):
@@ -103,6 +85,36 @@ class ActivityRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 	lookup_field = "id"
 
 
+class DestinationFilter(django_filters.FilterSet):
+	
+	Best_time_for_travel = django_filters.RangeFilter(field_name='ActualPricePerPerson')
+	# package_days = django_filters.RangeFilter(field_name='PackageDays')
+
+	class Meta:
+		model = Destination
+		fields = {'DestinationType','package'}
+
+class DestinationListSerializer(APIView):
+	queryset = Destination.objects.all()
+	serializer_class = DestinationListSerializer
+	filter_backends = (DjangoFilterBackend,)
+	filterset_class = DestinationFilter
+
+class testAPIView(APIView):
+	def get(self,request):
+		id =request.GET.get('id')
+		print(id,'idddddddddd')
+		return Response("successfully")
+
+from rest_framework.decorators import api_view
+@api_view(['get'])
+def xyz(self,request):
+	id =request.GET.get('id')
+	print(id,'idddddddddd')
+	return Response("successfully")
+
+
+
 class DestinationListCreateAPIView(ListCreateAPIView):
 
 	queryset = Destination.objects.all()
@@ -131,8 +143,6 @@ class HotelCreateAPIView(CreateAPIView):
 		return Response(serializer.errors, status=400)
 
 
-
-
 #Completed
 class HotelAddAPIView(APIView):
 	def post(self, request, format=None):
@@ -156,6 +166,7 @@ class PackageFilter(django_filters.FilterSet):
 	
 	price_per_persion = django_filters.RangeFilter(field_name='ActualPricePerPerson')
 	package_days = django_filters.RangeFilter(field_name='PackageDays')
+	# hotel__stars = django_filters.NumberFilter(field_name=hotel_package)
 	class Meta:
 		model = Package
 		fields = {'category','package_days','price_per_persion','Destination__DestinationType','activity','inclusion',
@@ -172,18 +183,18 @@ class PackageListAPIView(ListAPIView):
 
 class PackageCreateAPIView(CreateAPIView):
 	queryset = Package.objects.all()
-	serializer_class = PackageDetailSerializer
+	serializer_class = PackageCreateSerializer
 	# permissions_classes = (IsAuthenticated,IsAdminUser)
 
 class PackageUpdateAPIView(UpdateAPIView):
 	queryset = Package.objects.all()
-	serializer_class = PackageDetailSerializer
+	serializer_class = PackageCreateSerializer
 	lookup_field = "id"
 	# permissions_classes = (IsAuthenticated,IsAdminUser)
 
 class PackageDeleteAPIView(DestroyAPIView):
 	queryset = Package.objects.all()
-	serializer_class = PackageDetailSerializer
+	serializer_class = PackageCreateSerializer
 	lookup_field = "id"
 	# permissions_classes = (IsAuthenticated,IsAdminUser)
 
@@ -197,8 +208,13 @@ class PackageListCategoryAPIView(ListAPIView):
 	serializer_class = PackageListSerializer
 	def get_queryset(self):
 		catId = self.kwargs['catId']
+		obj = Package.objects.filter(category_id =catId)
+		#to get att
+		print(obj.values_list('id', flat=True).order_by('id'))
 		return Package.objects.filter(category_id =catId)
 
+# class DestinationListAPIView(APIView):
+	
 
 # class RecentlyViewedListAPIView(ListAPIView):
 # 	serializer_class = PackageListSerializer

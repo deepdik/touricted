@@ -16,17 +16,30 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '2h%s&+w!9^$#5fld@v1lw(5f9!%u5oor9bntc7t8c6s^rngzv)'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['159.65.145.233','localhost','192.168.0.105','127.0.0.1']
 
+REST_USE_JWT = True #social login
+
+
+# social login
+SITE_ID = 1
+
+FCM_DJANGO_SETTINGS = {
+        "FCM_SERVER_KEY": "AAAA3Mgl_0Y:APA91bFKigkhtGaXIKoGL60v8hTOT-a4u7OwZ_Y98jK8AlRcqQUcLjmtDHMCuY9i5am54h7XMQzgWSpQS5YusFJ5P5Nym2YqccghCf4EMeVtGcGemwKf_bOsXCqM86GK3r2hCSoDt3yAlp5v2UncAh6gQ1h3UF6YnA"
+}
 
 # Application definition
 
@@ -39,7 +52,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tourist',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'fcm_django',
+    'push_notifications',
+    'rest_auth',
+       # 'rest_framework.authtoken',
+    'rest_auth.registration',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 
 ]
 
@@ -58,7 +82,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -158,3 +182,11 @@ REST_FRAMEWORK = {
     #     'user': '200/day'
     # },
 }
+DEFAULT_FROM_EMAIL = 'dk5f1995@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dk5f1995@gmail.com'
+EMAIL_HOST_PASSWORD = 'Deepak@95'
+EMAIL_PORT = 587
+SERVER_EMAIL='dk5f1995@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from tourist.models import (Package,Category,Hotel,HotelImage,
-	Itinerary,ItineraryDays,Activity,Image,Inclusion,HotelImage,Destination,HotelsForPackage,Packageimages)
+    Itinerary,IncludedHotel,ItineraryDays,Activity,Image,Inclusion,HotelImage,Destination,HotelsForPackage,Packageimages)
 
 class HotelsForPackageInline(admin.TabularInline):
     model = HotelsForPackage
@@ -12,15 +12,15 @@ class PackageimagesInline(admin.TabularInline):
 
 
 class PackageAdmin(admin.ModelAdmin):
-	list_display = ('PackageName','Destination',)
-	list_filter = ('PackageName','Destination')
-	inlines = [ HotelsForPackageInline, PackageimagesInline,]
-	# list_editable = ('category','pricingTabName')
-	# search_fields = ('PackageName')
-	
+    list_display = ('PackageName','Destination',)
+    list_filter = ('PackageName','Destination')
+    inlines = [ HotelsForPackageInline, PackageimagesInline,]
+    # list_editable = ('category','pricingTabName')
+    # search_fields = ('PackageName')
+    
 class CategoryAdmin(admin.ModelAdmin):
-	list_display = ('name','timestamp')
-	# search_fields = ('name')
+    list_display = ('name','timestamp')
+    # search_fields = ('name')
 
 
 class HotelImageInline(admin.TabularInline):
@@ -47,7 +47,7 @@ admin.site.register(Activity)
 
 admin.site.register(Inclusion)
 admin.site.register(Image)
-# admin.site.register(HotelImage)
+admin.site.register(IncludedHotel)
 # admin.site.register(ItineraryDays)
 admin.site.register(Destination)
 
