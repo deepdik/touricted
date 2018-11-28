@@ -6,8 +6,13 @@ from django.utils.http import urlsafe_base64_decode
 from accounts.tokens import account_activation_token
 # Create your views here.
 
-
 User = get_user_model()
+from django.views import View
+
+class ServiceWorkerView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'fcmtest/firebase-messaging-sw.js', content_type="application/x-javascript")
+
 
 def activate(request, uidb64, token):
 	try:

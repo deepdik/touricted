@@ -44,7 +44,6 @@ urlpatterns = [
   url(r'^package/detail/(?P<id>\d+)/$',PackageDetailAPIView.as_view(),name="detailPackage"),
   url(r'^packages/(?P<catId>\d+)/$',PackageListCategoryAPIView.as_view(),name="packageCatList"),
 
-
   url(r'^inclusions/$',InclusionListCreateAPIView.as_view(),name="listCreateInclusion"),
   url(r'^edit-delete-inclusions/(?P<id>\d+)/$',InclusionRetrieveUpdateDestroyAPIView.as_view(),name="updatedeleteinclusion"),
 

@@ -53,7 +53,6 @@ from django_filters import rest_framework as filters
 import django_filters
 
 
-
 class CategoryListCreateAPIView(ListCreateAPIView):
 
 	queryset = Category.objects.all()
@@ -85,10 +84,9 @@ class ActivityRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 	lookup_field = "id"
 
 
-class DestinationFilter(django_filters.FilterSet):
-	
+class DestinationFilter(django_filters.FilterSet):	
 	Best_time_for_travel = django_filters.RangeFilter(field_name='ActualPricePerPerson')
-	# package_days = django_filters.RangeFilter(field_name='PackageDays')
+	
 
 	class Meta:
 		model = Destination
@@ -113,25 +111,21 @@ def xyz(self,request):
 	print(id,'idddddddddd')
 	return Response("successfully")
 
-
-
 class DestinationListCreateAPIView(ListCreateAPIView):
 
 	queryset = Destination.objects.all()
 	serializer_class = DestinationDetailSerilizer
+	filter_backends = (DjangoFilterBackend,)
+	filterset_fields =('DestinationType',) 
 
 class DestinationRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 	queryset = Destination.objects.all()
 	serializer_class = DestinationDetailSerilizer
 	lookup_field = "id"
 
-
-
 class HotelListCreateAPIView(ListAPIView):
-
 	queryset = Hotel.objects.all()
 	
-
 class HotelCreateAPIView(CreateAPIView):
 
 
@@ -141,7 +135,6 @@ class HotelCreateAPIView(CreateAPIView):
 			serializer.save()
 			return Response(serializer.data, status=201)
 		return Response(serializer.errors, status=400)
-
 
 #Completed
 class HotelAddAPIView(APIView):

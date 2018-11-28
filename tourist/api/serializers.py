@@ -17,11 +17,13 @@ from tourist.models import (
 from rest_framework.serializers import (
 	ModelSerializer,
 	SerializerMethodField,
+	HyperlinkedIdentityField
 
 
 	)
 
-#done
+# done
+
 
 class CategoryListSerializer(ModelSerializer):
 	class Meta:
@@ -32,6 +34,7 @@ class CategoryListSerializer(ModelSerializer):
 			'CatImg',
 		]
 
+
 class CategoryDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Category
@@ -41,25 +44,30 @@ class CategoryDetailSerializer(ModelSerializer):
 
 		]
 
+
 class ActivityDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Activity
-		fields = ['name','ActImg']
+		fields = ['name', 'ActImg']
+
 
 class InclusionDetailSerializer(ModelSerializer):
 	class Meta:
 		model = Inclusion
-		fields = ['id', 'name','InclImg']
+		fields = ['id', 'name', 'InclImg']
+
 
 class PackageimagesListSerilizer(ModelSerializer):
 	class Meta:
 		model = Packageimages
-		fields = ['image','caption']
+		fields = ['image', 'caption']
+
 
 class DestinationDetailSerilizer(ModelSerializer):
 	class Meta:
-		model  = Destination
+		model = Destination
 		fields = '__all__'
+
 
 class DestinationListSerializer(ModelSerializer):
 
@@ -67,15 +75,18 @@ class DestinationListSerializer(ModelSerializer):
 		model = Destination
 		fields= '__all__'
 
+
 class HotelImageListSerializer(ModelSerializer):
 	class Meta:
 		model = HotelImage
 		fields = ['images']
 
+
 class HotelImageTestListSerializer(ModelSerializer):
 	class Meta:
 		model = HotelTest
 		fields = ['image']
+
 
 class PackageCreateSerializer(ModelSerializer):
 	class Meta:
@@ -87,15 +98,15 @@ class HotelListSerializer(ModelSerializer):
 	images = SerializerMethodField()
 	facilities = SerializerMethodField()
 
-	def get_images(self,instance):
+	def get_images(self, instance):
 
-		hotel = HotelImage.objects.filter(hotel = instance.id)
-		data = HotelImageListSerializer(hotel,many=True).data
+		hotel = HotelImage.objects.filter(hotel=instance.id)
+		data = HotelImageListSerializer(hotel, many=True).data
 		return data
 
-	def get_facilities(self,instance):
-		fac_str  =   instance.facilities
-		fac_list= fac_str.split(",")
+	def get_facilities(self, instance):
+		fac_str = instance.facilities
+		fac_list = fac_str.split(",")
 		return fac_list
 
 	class Meta:
@@ -108,18 +119,14 @@ class HoteltestCreateSerializer(ModelSerializer):
 
 	# image =Base64ImageField()
 
-
 	class Meta:
-		model=HotelTest
-		fields= ['image']
+		model = HotelTest
+		fields = ['image']
 
 	def create(self, validated_data):
-		image=validated_data.pop('image')
+		image = validated_data.pop('image')
 
 		return HotelTest.objects.create(image=image)
-
-
-
 
 
 class HotelAddSerializer(ModelSerializer):
@@ -141,17 +148,11 @@ class HotelAddSerializer(ModelSerializer):
 		return hotel
 
 
-
-
-
 class HotelsForPackageSerializer(ModelSerializer):
 	hotel = HotelListSerializer()
 	class Meta:
 		model = HotelsForPackage
 		fields = ['day','hotel']
-
-
-
 
 
 class ItineraryDayListSerializer(ModelSerializer):
@@ -188,8 +189,6 @@ class ItineraryListSerializer(ModelSerializer):
 
 		]
 
-
-
 #done
 class ItineraryAddHelperSerializer(ModelSerializer):
 	class Meta:
@@ -224,11 +223,6 @@ class ItineraryAddSerializer(ModelSerializer):
 			for inclusion in inclusions:
 				itinerary_day.Inclusion.add(inclusion)
 		return Itinerary
-
-
-
-
-
 
 
 #done
@@ -321,7 +315,7 @@ class PackageListSerializer(ModelSerializer):
 	inclusion = InclusionDetailSerializer(many=True)
 	Destination = DestinationDetailSerilizer()
 	cities  =SerializerMethodField()
-
+	detail_url = HyperlinkedIdentityField(view_name ='tourist-api:detailPackage',lookup_field='id')
 	def get_offer(self,instance):
 		ActualPrice  =   instance.ActualPricePerPerson
 		OfferedPrice  =instance.OfferedPricePerPerson
@@ -352,6 +346,7 @@ class PackageListSerializer(ModelSerializer):
 			'OfferedPricePerPerson',
 			'offer',
 			'BannerImage',
+			'detail_url'
 		]
 
 #done

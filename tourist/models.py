@@ -59,8 +59,17 @@ class Destination(models.Model):
 	DestinationType = models.CharField(max_length=120, choices=TYPE)
 	name = models.CharField(max_length =120,unique=True)
 	image = models.ImageField()
+	about = models.TextField(blank = True,null = True)
+	number_of_packages =  models.PositiveIntegerField(default = 50)
+	min_pkg_days = models.PositiveIntegerField(default = 1)
+	max_pkg_days = models.PositiveIntegerField(default = 2)
+	activity = models.ManyToManyField(Activity,blank=True)
+	inclusion = models.ManyToManyField(Inclusion,blank=True)
+	category = models.ManyToManyField(Category,blank=True)
 	Best_time_for_travel_from = models.CharField(max_length=120, choices=MONTHS)
 	Best_time_for_travel_to = models.CharField(max_length=120, choices=MONTHS)
+	min_package_price = models.PositiveIntegerField(default = 4000)
+	max_package_price = models.PositiveIntegerField(default = 50000)
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
@@ -124,7 +133,6 @@ class ItineraryDays(models.Model):
 	Cities = models.CharField(max_length = 120,default = 'cities')
 	Day =  models.PositiveIntegerField()
 	Inclusion = models.ManyToManyField(Inclusion)
-
 	Title = models.CharField(max_length = 120,default = 'title')
 	About = models.TextField(default = 'About')
 	Labels = models.TextField(blank = True, null = True)
@@ -154,8 +162,7 @@ class Package(models.Model):
 	PackageNights = models.PositiveSmallIntegerField(default=1)
 	category = models.ForeignKey(Category)
 	activity = models.ManyToManyField(Activity)
-	inclusion = models.ManyToManyField(Inclusion)
-	
+	inclusion = models.ManyToManyField(Inclusion)	
 	hotel = models.ManyToManyField(IncludedHotel)
 	hotelStars = models.CharField(max_length = 120,blank=True)
 	# cities = models.CharField(max_length=120)

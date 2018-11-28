@@ -29,7 +29,7 @@ SECRET_KEY = '2h%s&+w!9^$#5fld@v1lw(5f9!%u5oor9bntc7t8c6s^rngzv)'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['159.65.145.233','localhost','192.168.0.105','127.0.0.1']
+ALLOWED_HOSTS = ['159.65.145.233','192.168.0.119',  'localhost','192.168.0.105','127.0.0.1']
 
 REST_USE_JWT = True #social login
 
@@ -40,6 +40,13 @@ SITE_ID = 1
 FCM_DJANGO_SETTINGS = {
         "FCM_SERVER_KEY": "AAAA3Mgl_0Y:APA91bFKigkhtGaXIKoGL60v8hTOT-a4u7OwZ_Y98jK8AlRcqQUcLjmtDHMCuY9i5am54h7XMQzgWSpQS5YusFJ5P5Nym2YqccghCf4EMeVtGcGemwKf_bOsXCqM86GK3r2hCSoDt3yAlp5v2UncAh6gQ1h3UF6YnA"
 }
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+        "FCM_API_KEY": "[your api key]",
+        "GCM_API_KEY": "[your api key]",
+      
+}
+
 
 # Application definition
 

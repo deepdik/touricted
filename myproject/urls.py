@@ -17,7 +17,8 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from accounts.views import activate
+from accounts.views import activate,ServiceWorkerView
+from django.views.generic.base import TemplateView
 
 
 urlpatterns = [
@@ -29,12 +30,17 @@ urlpatterns = [
     url('^', include('django.contrib.auth.urls')), #email varification
     url(r'^rest-auth/', include('rest_auth.urls')), #social login
     url(r'^accounts/',include('allauth.urls'), name='socialaccount_signup'),
-    
-   
+    url(r'^firebase-messaging-sw.js', ServiceWorkerView.as_view(), name='service_worker')# web firebase pushnotification
+      
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    url(r'',TemplateView.as_view(template_name='home.html')),
+]
+
 
 admin.site.site_header = 'Touricted Administration'
 admin.site.index_title = 'Touricted' 
