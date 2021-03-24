@@ -58,7 +58,7 @@ pywebpush==1.7.0
 requests==2.20.1
 requests-oauthlib==1.0.0
 requests-toolbelt==0.8.0
-rsa==4.0
+rsa==4.1
 service-identity==17.0.0
 six==1.11.0
 treq==18.6.0
